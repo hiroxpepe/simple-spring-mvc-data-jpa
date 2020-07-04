@@ -1,0 +1,1 @@
+# simple-spring-mvc-data-jpa
