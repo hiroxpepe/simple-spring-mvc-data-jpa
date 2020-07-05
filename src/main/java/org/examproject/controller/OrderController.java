@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.validation.Valid;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -118,7 +118,7 @@ public class OrderController {
      */
     @RequestMapping(value="order/add", method=RequestMethod.POST)
     public String insert(
-        @Validated
+        @Valid
         @ModelAttribute(value="orderForm")
         OrderModel form,
         BindingResult result,
@@ -144,7 +144,8 @@ public class OrderController {
      */
     @RequestMapping(value="order/update/{orderId}", method=RequestMethod.GET)
     public String select(
-        @PathVariable String orderId,
+        @PathVariable
+        String orderId,
         ModelMap model
     ) {
         // get entity-pojo.
@@ -167,8 +168,9 @@ public class OrderController {
      */
     @RequestMapping(value="order/update/{orderId}", method=RequestMethod.POST)
     public String update(
-        @PathVariable String orderId,
-        @Validated
+        @PathVariable
+        String orderId,
+        @Valid
         @ModelAttribute(value="orderForm")
         OrderModel form,
         BindingResult result,
@@ -197,7 +199,8 @@ public class OrderController {
      */
     @RequestMapping(value="order/delete/{orderId}", method=RequestMethod.POST)
     public String delete(
-        @PathVariable String orderId
+        @PathVariable
+        String orderId
     ) {
         // get entity-pojo.
         Order entity = (Order) context.getBean("codeToOrderTransformer", Transformer.class).transform(orderId);
