@@ -14,10 +14,7 @@
 
 package org.examproject.repository;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import org.examproject.entity.Status;
 
@@ -26,9 +23,6 @@ import org.examproject.entity.Status;
  */
 public interface StatusRepository extends JpaRepository<Status, Long> {
 
-    public Status findById(String id);
-
-    //@Query(value="SELECT SUM(o.quantity), o.productName FROM Order o GROUP BY o.productName")
-    //public List<?> sumQuantityGroupByProductName();
+    public Status findByText(String text);
 
 }

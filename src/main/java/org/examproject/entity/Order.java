@@ -16,6 +16,7 @@ package org.examproject.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,6 +28,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * @author h.adachi
@@ -34,17 +37,19 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="orders")
+@Component
+@Scope(value="prototype")
 public class Order implements Serializable {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name="id", unique=true)
     private Long id;
 
-    @Column(name="order_id", unique=true)
+    @Column(name="order_id", unique=true, length=36)
     private String orderId;
 
-    @Column(name="product_name", length=32)
+    @Column(name="product_name", length=64)
     private String productName;
 
     @Column(name="quantity")
@@ -58,7 +63,7 @@ public class Order implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated;
 
-    @ManyToOne
+    @ManyToOne/*(cascade = CascadeType.ALL)*/
     private Status status;
 
 }

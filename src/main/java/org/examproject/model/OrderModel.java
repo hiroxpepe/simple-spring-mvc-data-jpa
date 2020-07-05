@@ -32,6 +32,6 @@ public class OrderModel {
 
     private Long quantity;
 
-    private String status;
+    private Long status;
 
 }

@@ -15,14 +15,20 @@
 package org.examproject.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * @author h.adachi
@@ -30,14 +36,19 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="statuses")
+@Component
+@Scope(value="prototype")
 public class Status implements Serializable {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name="id", unique=true)
     private Long id;
 
-    @Column(name="text", unique=true, length=8)
+    @Column(name="text", unique=true, length=12)
     private String text;
+
+    @OneToMany(mappedBy="status", cascade=CascadeType.ALL)
+    private List<Order> orderList = new ArrayList<Order>();
 
 }

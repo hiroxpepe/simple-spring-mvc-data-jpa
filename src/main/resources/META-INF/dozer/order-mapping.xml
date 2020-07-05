@@ -3,6 +3,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://dozer.sourceforge.net http://dozer.sourceforge.net/schema/beanmapping.xsd">
 
-    <!-- add code to set. -->
-    
+    <mapping>
+      <class-a>org.examproject.entity.Order</class-a>
+      <class-b>org.examproject.model.OrderModel</class-b>
+      <field>
+        <a>status.id</a>
+        <b>status</b>
+      </field>
+    </mapping>
+
 </mappings>
