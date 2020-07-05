@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -40,7 +41,6 @@ import org.examproject.entity.Order;
 import org.examproject.model.OrderModel;
 import org.examproject.repository.OrderRepository;
 import org.examproject.repository.StatusRepository;
-import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @author h.adachi
@@ -86,7 +86,7 @@ public class OrderController {
         List<Order> entityList = (List<Order>) context.getBean("orderListFactory", Factory.class).create();
 
         // set form-pojo list.
-        model.addAttribute("orderModelList", getOrderModelList(entityList));
+        model.addAttribute("orderModelList", createOrderModelListBy(entityList));
 
         return "list";
     }
@@ -95,7 +95,7 @@ public class OrderController {
      * prepare insert.
      */
     @RequestMapping(value="order/add", method=RequestMethod.GET)
-    public String order(ModelMap model) {
+    public String prepare(ModelMap model) {
 
         // get form-pojo.
         OrderModel form = context.getBean(OrderModel.class);
@@ -121,7 +121,7 @@ public class OrderController {
         if (result.hasErrors()) { return "order"; }
 
         // get entity-pojo.
-        Order entity = mapFormToEntity(form);
+        Order entity = createOrderBy(form);
 
         // save entity-pojo.
         context.getBean("addOrderClosure", Closure.class).execute(entity);
@@ -133,7 +133,7 @@ public class OrderController {
      * prepare update.
      */
     @RequestMapping(value="order/update/{orderId}", method=RequestMethod.GET)
-    public String selectUpdate(
+    public String select(
         @PathVariable String orderId,
         ModelMap model
     ) {
@@ -141,7 +141,7 @@ public class OrderController {
         Order entity = (Order) context.getBean("codeToOrderTransformer", Transformer.class).transform(orderId);
 
         // get form-pojo.
-        OrderModel form = mapEntityToForm(entity);
+        OrderModel form = createOrderModelBy(entity);
 
         // set form-pojo.
         model.addAttribute("orderForm", form);
@@ -195,19 +195,28 @@ public class OrderController {
     ///////////////////////////////////////////////////////////////////////////
     // private Methods
 
-    private OrderModel mapEntityToForm(Order entity) {
+    /**
+     * create form-pojo from entity-pojo.
+     */
+    private OrderModel createOrderModelBy(Order entity) {
         OrderModel form = context.getBean(OrderModel.class);
         mapper.map(entity, form);
         return form;
     }
 
-    private Order mapFormToEntity(OrderModel form) {
+    /**
+     * create entity-pojo from form-pojo.
+     */
+    private Order createOrderBy(OrderModel form) {
         Order entity = context.getBean(Order.class);
         mapper.map(form, entity);
         return entity;
     }
 
-    private List<OrderModel> getOrderModelList(List<Order> entityList) {
+    /**
+     * create new form-pojo list form entity-pogo list.
+     */
+    private List<OrderModel> createOrderModelListBy(List<Order> entityList) {
         List<OrderModel> modelList = new ArrayList<>();
         entityList.forEach((Order entity) -> {
             OrderModel model = context.getBean(OrderModel.class);
