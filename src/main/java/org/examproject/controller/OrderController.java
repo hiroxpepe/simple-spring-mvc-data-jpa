@@ -16,7 +16,9 @@ package org.examproject.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.validation.Valid;
 
@@ -39,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.examproject.entity.Order;
 import org.examproject.model.OrderModel;
+import org.examproject.model.TotalModel;
 import org.examproject.repository.OrderRepository;
 import org.examproject.repository.StatusRepository;
 
@@ -192,6 +195,24 @@ public class OrderController {
         return "redirect:/order/list";
     }
 
+    /**
+     * show total.
+     */
+    @RequestMapping(value="total", method=RequestMethod.GET)
+    public String total(ModelMap model) {
+
+        // get form-pojo list.
+        List<TotalModel> totalModelList = createTotalModelListBy(
+            (Map<String, Long>) context.getBean("totalOrderCountMapFactory", Factory.class).create(),
+            (Map<String, Long>) context.getBean("totalQuantityMapFactory", Factory.class).create()
+        );
+
+        // set form-pojo list.
+        model.addAttribute("totalModelList", totalModelList);
+
+        return "total";
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // private Methods
 
@@ -226,8 +247,31 @@ public class OrderController {
         return modelList;
     }
 
+    /**
+     * create new total-pojo list form some list.
+     */
+    private List<TotalModel> createTotalModelListBy(
+        Map<String, Long> totalOrderCountMap,
+        Map<String, Long> totalQuantityMap
+    ) {
+        List<TotalModel> totalModelList = new ArrayList<>();
+        totalOrderCountMap.forEach((key, value) -> {
+            TotalModel form = context.getBean(TotalModel.class);
+            form.setProductName(key);
+            form.setOrderCount(value);
+            totalModelList.add(form);
+        });
+        totalQuantityMap.forEach((key, value) -> {
+            TotalModel form = totalModelList.stream()
+                .filter(t -> t.getProductName().equals(key))
+                .findFirst().orElse(null);
+            form.setQuantity(value);
+        });
+        return totalModelList;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
-    // inner functor Classes
+    // inner functor Classes (*it would be better to divide into service classes.)
 
     /**
       * select the entity by order_id.
@@ -295,6 +339,42 @@ public class OrderController {
             entity.setUpdated(new Date());
             entity.setStatus(statusRepository.findByText("Created"));
             orderRepository.save(entity);
+        }
+    }
+
+    /**
+     * count the total order per product.
+     */
+    @Service(value="totalOrderCountMapFactory")
+    class TotalOrderCountMapFactory implements Factory {
+        @Override
+        @Transactional
+        public Object create() {
+            Map<String, Long> countNameMap = new HashMap<>();
+            orderRepository.countOrderCountGroupByProductName().stream()
+                .map(o -> (Object[]) o)
+                .forEachOrdered((array) -> {
+                    countNameMap.put((String) array[1], (Long) array[0]);
+                });
+            return countNameMap;
+        }
+    }
+
+    /**
+     * sum the total quantity per product.
+     */
+    @Service(value="totalQuantityMapFactory")
+    class TotalQuantityMapFactory implements Factory {
+        @Override
+        @Transactional
+        public Object create() {
+            Map<String, Long> countNameMap = new HashMap<>();
+            orderRepository.sumQuantityGroupByProductName().stream()
+                .map(o -> (Object[]) o)
+                .forEachOrdered((array) -> {
+                    countNameMap.put((String) array[1], (Long) array[0]);
+                });
+            return countNameMap;
         }
     }
 

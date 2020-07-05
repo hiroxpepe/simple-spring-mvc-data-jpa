@@ -12,6 +12,9 @@
         <div class="generic-container">
             <div class="well lead">Welcome to the Shop</div>
             <span class="well floatRight">
+                <a href="<c:url value='/total' />">Show total</a>
+            </span>
+            <span class="well floatRight">
                 <a href="<c:url value='order/list' />">Order list</a>
             </span>
             <span class="well floatRight">

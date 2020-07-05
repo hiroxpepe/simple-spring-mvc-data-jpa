@@ -16,7 +16,6 @@ package org.examproject.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -63,7 +62,7 @@ public class Order implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated;
 
-    @ManyToOne/*(cascade = CascadeType.ALL)*/
+    @ManyToOne
     private Status status;
 
 }

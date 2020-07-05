@@ -12,35 +12,24 @@
  * limitations under the License.
  */
 
-package org.examproject.value;
+package org.examproject.model;
+
+import lombok.Data;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * @author h.adachi
  */
-public enum OrderStatus {
+@Data
+@Component
+@Scope(value="prototype")
+public class TotalModel {
 
-    CREATED("Created"),
-    PENDING("Pending"),
-    CONFIRMED("Confirmed"),
-    FAILED("Failed");
+    private String productName;
 
-    private final String status;
+    private Long orderCount;
 
-    private OrderStatus(final String status) {
-        this.status = status;
-    }
-
-    public String getStatus() {
-        return this.status;
-    }
-
-    @Override
-    public String toString() {
-        return this.status;
-    }
-
-    public String getName() {
-        return this.name();
-    }
+    private Long quantity;
 
 }

@@ -28,7 +28,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     public Order findByOrderId(String orderId);
 
-    //@Query(value="SELECT SUM(o.quantity), o.productName FROM Order o GROUP BY o.productName")
-    //public List<?> sumQuantityGroupByProductName();
+    @Query(value="SELECT COUNT(o.id), o.productName FROM Order o GROUP BY o.productName")
+    public List<?> countOrderCountGroupByProductName();
+
+    @Query(value="SELECT SUM(o.quantity), o.productName FROM Order o GROUP BY o.productName")
+    public List<?> sumQuantityGroupByProductName();
 
 }

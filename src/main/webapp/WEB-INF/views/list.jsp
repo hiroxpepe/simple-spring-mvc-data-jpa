@@ -15,7 +15,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Name</th>
+                        <th>Product name</th>
                         <th>Quantity</th>
                         <th>Operation</th>
                         <th>Status</th>
@@ -36,7 +36,7 @@
                             <td><c:out value="${order.productName}" /></td>
                             <td><c:out value="${order.quantity}" /></td>
                             <td>
-                                <a href='<c:out value="${editUrl}" />'>[EDIT]</a>
+                                <a href='<c:out value="${editUrl}" />'>[Edit]</a>
                                 <a href="javascript:document.forms['${deleteForm}'].submit();">[Delete]</a>
                             </td>
                             <td><c:out value="${order.statusText}" /></td>
@@ -44,6 +44,12 @@
                     </c:forEach>
                 </tbody>
             </table>
+            <span class="well floatRight">
+                <a href="<c:url value='/index' />">Home</a>
+            </span>
+            <span class="well floatRight">
+                <a href="<c:url value='/total' />">Show total</a>
+            </span>
             <span class="well floatRight">
                 <a href="<c:url value='/order/add' />">Buy More</a>
             </span>
