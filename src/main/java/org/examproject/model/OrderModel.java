@@ -34,4 +34,18 @@ public class OrderModel {
 
     private Long status;
 
+    public String getStatusText() {
+        switch (status.intValue()) {
+            case 1:
+                return "Created";
+            case 2:
+                return "Pending";
+            case 3:
+                return "Confirmed";
+            case 4:
+                return "Failed";
+        }
+        return "";
+    }
+
 }

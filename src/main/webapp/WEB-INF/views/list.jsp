@@ -14,8 +14,10 @@
             <table class="table table-hover table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>No</th>
                         <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Operation</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -26,16 +28,18 @@
                         <%-- create an url for delete --%>
                         <c:url var="deleteUrl" value="/order/delete/${order.orderId}" />
                         <%-- create an id value for delete --%>
-                        <c:set var="deleteForm" value="order${status.index}" />
+                        <c:set var="deleteForm" value="order${status.count}" />
                         <%-- create a form for delete --%>
                         <form id="${deleteForm}" action="${deleteUrl}" method="POST"></form>
                         <tr>
+                            <td>${status.count}</td>
+                            <td><c:out value="${order.productName}" /></td>
+                            <td><c:out value="${order.quantity}" /></td>
                             <td>
-                                <a href='<c:out value="${editUrl}" />'><c:out value="${order.orderId}" /></a>
+                                <a href='<c:out value="${editUrl}" />'>[EDIT]</a>
                                 <a href="javascript:document.forms['${deleteForm}'].submit();">[Delete]</a>
                             </td>
-                            <td><c:out value="${order.productName}" /></td>
-                            <td><c:out value="${order.status}" /></td>
+                            <td><c:out value="${order.statusText}" /></td>
                         </tr>
                     </c:forEach>
                 </tbody>
