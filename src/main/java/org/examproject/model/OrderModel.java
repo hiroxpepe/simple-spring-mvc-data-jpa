@@ -14,6 +14,12 @@
 
 package org.examproject.model;
 
+import java.io.Serializable;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import lombok.Data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -24,12 +30,16 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @Scope(value="prototype")
-public class OrderModel {
+public class OrderModel implements Serializable {
 
     private String orderId;
 
+    @NotNull
+    @Size(min=1, max=24)
     private String productName;
 
+    @Max(100)
+    @Min(1)
     private Long quantity;
 
     private Long status;

@@ -14,6 +14,8 @@
 
 package org.examproject.model;
 
+import java.io.Serializable;
+
 import lombok.Data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -24,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @Scope(value="prototype")
-public class TotalModel {
+public class TotalModel implements Serializable {
 
     private String productName;
 

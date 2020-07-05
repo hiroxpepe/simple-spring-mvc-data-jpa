@@ -14,6 +14,7 @@
         <jackson.version>2.11.0</jackson.version>
         <tiles.version>3.0.8</tiles.version>
         <dozer.version>5.5.1</dozer.version>
+        <hibernate.validator.version>6.1.5.Final</hibernate.validator.version>
         <hibernate.version>5.4.17.Final</hibernate.version>
         <lombok.version>1.18.12</lombok.version>
         <slf4j.version>1.7.30</slf4j.version>
@@ -82,6 +83,13 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${hibernate.version}</version>
+        </dependency>
+
+        <!-- Hibernate Validation -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate.validator.version}</version>
         </dependency>
 
         <!-- HSQLDB -->

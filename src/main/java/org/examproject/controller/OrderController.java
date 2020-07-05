@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import javax.validation.Valid;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +34,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -103,7 +104,7 @@ public class OrderController {
         // get form-pojo.
         OrderModel form = context.getBean(OrderModel.class);
 
-        // set form-opjo.
+        // set form-pojo.
         model.addAttribute("orderForm", form);
 
         // set state
@@ -117,11 +118,17 @@ public class OrderController {
      */
     @RequestMapping(value="order/add", method=RequestMethod.POST)
     public String insert(
-        @Valid OrderModel form,
+        @Validated
+        @ModelAttribute(value="orderForm")
+        OrderModel form,
         BindingResult result,
         ModelMap model
     ) {
-        if (result.hasErrors()) { return "order"; }
+        if (result.hasErrors()) {
+            // set state
+            model.addAttribute("state", "insert");
+            return "order";
+        }
 
         // get entity-pojo.
         Order entity = createOrderBy(form);
@@ -161,11 +168,17 @@ public class OrderController {
     @RequestMapping(value="order/update/{orderId}", method=RequestMethod.POST)
     public String update(
         @PathVariable String orderId,
-        @Valid OrderModel form,
+        @Validated
+        @ModelAttribute(value="orderForm")
+        OrderModel form,
         BindingResult result,
         ModelMap model
     ) {
-        if (result.hasErrors()) { return "order"; }
+        if (result.hasErrors()) {
+            // set state
+            model.addAttribute("state", "update");
+            return "order";
+        }
 
         // get entity-pojo.
         Order entity = (Order) context.getBean("codeToOrderTransformer", Transformer.class).transform(orderId);
@@ -235,7 +248,7 @@ public class OrderController {
     }
 
     /**
-     * create new form-pojo list form entity-pogo list.
+     * create new form-pojo list from entity-pojo list.
      */
     private List<OrderModel> createOrderModelListBy(List<Order> entityList) {
         List<OrderModel> modelList = new ArrayList<>();
@@ -248,7 +261,7 @@ public class OrderController {
     }
 
     /**
-     * create new total-pojo list form some list.
+     * create new total-pojo list from some list.
      */
     private List<TotalModel> createTotalModelListBy(
         Map<String, Long> totalOrderCountMap,
